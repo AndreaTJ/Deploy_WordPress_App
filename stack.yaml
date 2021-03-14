@@ -1,0 +1,34 @@
+Resources:
+  Instance1:
+    Type: AWS::EC2::Instance
+    Properties:
+      KeyName: CloudFormationKeyPair
+      ImageId: ami-0b6b51e397faf2316
+      InstanceType: t2.micro
+      IamInstanceProfile: CodeDeployDemo-EC2-Instance-Profile
+      Tags:
+        - Key: "Name"
+          Value: "CodeDeployDemo"
+      SecurityGroups:
+        - !Ref AllowSSH
+        - !Ref AllowHTTP
+
+  AllowSSH:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH access
+      SecurityGroupIngress:
+        IpProtocol: tcp
+        FromPort: '22'
+        ToPort: '22'
+        CidrIp: 0.0.0.0/0
+
+  AllowHTTP:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable HTTP access
+      SecurityGroupIngress:
+        IpProtocol: tcp
+        FromPort: '80'
+        ToPort: '80'
+        CidrIp: 0.0.0.0/0
