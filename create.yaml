@@ -1,6 +1,11 @@
 - hosts: localhost
   connection: local
   tasks:
+  - name: "Creation S3 bucket"
+    s3_bucket:
+      name: codedeploydemo-1
+      policy: "{{ lookup('file','update_s3_bucket_policy.json') }}"
+      state: present
   - name: "generate key pair"
     openssh_keypair:
       path: ~/.ssh/ansible_id_rsa
@@ -28,7 +33,7 @@
   - debug:
       var: ec2
   - set_fact:
-      ec2_instances: "{{ ec2['instances']| map(attribute='public_dns_name') | list }}"
+      ec2_instances: "{{ ec2['instances'] | map(attribute='public_dns_name') | list }}"
   - name: "build inventory"
     add_host:
       name: "{{ item }}"
