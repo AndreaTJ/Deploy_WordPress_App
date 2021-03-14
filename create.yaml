@@ -1,11 +1,22 @@
 - hosts: localhost
   connection: local
   tasks:
+  - name: Install zip 
+    apt:
+      pkg:
+      - zip
+      update_cache: true
   - name: "Creation S3 bucket"
     s3_bucket:
       name: codedeploydemo-1
       policy: "{{ lookup('file','update_s3_bucket_policy.json') }}"
       state: present
+  - name: Ansible zip directory Wordpress
+    archive:
+      path:
+        - /root/deploy_wordpress_app/WordPress
+      dest: /root/deploy_wordpress_app/WordPress/WordPress.zip
+      format: zip
   - name: "generate key pair"
     openssh_keypair:
       path: ~/.ssh/ansible_id_rsa
